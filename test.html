@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <title>Knowledge Exchange Platform</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f4f4f4;
+      transition: all 0.3s ease;
+    }
+    .post-card, .notification-card, .leaderboard-card {
+      background: #fff;
+      padding: 20px;
+      margin-bottom: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+    .tag {
+      background-color: #ffd180;
+      border-radius: 5px;
+      padding: 2px 8px;
+      margin-right: 5px;
+      font-size: 12px;
+    }
+    .answer-box {
+      margin-top: 15px;
+      display: none;
+    }
+    .answer-container {
+      background: #f1f1f1;
+      padding: 10px;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+    /* RTL support */
+    [dir="rtl"] .tag {
+      margin-right: 0;
+      margin-left: 5px;
+    }
+    [dir="rtl"] .btn-group-sm {
+      direction: ltr; /* Keep button groups direction consistent */
+    }
+    [dir="rtl"] .ms-3 {
+      margin-right: 1rem !important;
+      margin-left: 0 !important;
+    }
+  </style>
+</head>
+
+
+
+<body>
+<div class="container py-4">
+
+  <!-- Language Toggle -->
+  <div class="d-flex justify-content-end mb-3">
+    <select id="languageSelect" class="form-select form-select-sm w-auto">
+      <option value="en">English</option>
+      <option value="ar">العربية</option>
+    </select>
+  </div>
+
+  <!-- Search and Filters -->
+  <div class="mb-4">
+    <div class="input-group mb-2">
+      <input type="text" class="form-control" placeholder="Search posts..." aria-label="Search">
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+      <select class="form-select form-select-sm w-auto">
+        <option>Sort by User</option>
+        <option>A-Z</option>
+        <option>Z-A</option>
+      </select>
+      <select class="form-select form-select-sm w-auto">
+        <option>Sort by Tag</option>
+        <option>JavaScript</option>
+        <option>SQL</option>
+      </select>
+      <select class="form-select form-select-sm w-auto">
+        <option>Sort by Date</option>
+        <option>Newest</option>
+        <option>Oldest</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Notification Center -->
+  <div class="notification-card">
+    <h5>🔔 Notifications</h5>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">✅ You received an upvote on your answer to "How does recursion work in JavaScript?"</li>
+      <li class="list-group-item">💬 Someone answered your question about SQL vs NoSQL</li>
+    </ul>
+  </div>
+
+  <!-- Post 1 -->
+  <div class="post-card">
+    <h5 class="post-title">How does recursion work in JavaScript?</h5>
+    <p class="post-body">
+      I'm struggling to understand recursion. Can someone explain it with a simple example?
+    </p>
+    <div class="mb-2">
+      <span class="tag">JavaScript</span>
+      <span class="tag">Recursion</span>
+    </div>
+
+    <div class="actions d-flex flex-wrap">
+      <button class="btn btn-outline-primary btn-sm toggle-answers">💬 View Answers</button>
+      <button class="btn btn-outline-success btn-sm">▲ Upvote</button>
+      <button class="btn btn-outline-danger btn-sm">▼ Downvote</button>
+      <button class="btn btn-outline-warning btn-sm">Report</button>
+      <button class="btn btn-outline-secondary btn-sm">Bookmark</button>
+      <button class="btn btn-outline-info btn-sm">View Resources</button>
+      <button class="btn btn-outline-dark btn-sm">Edit</button>
+    </div>
+ btn-primary" data-key="submitAnswer">Submit Answer</button>
+      </form>
+
+      <div class="answer-container">
+        <strong>Ali:</strong> <span data-key="aliAnswer">Recursion is when a function calls itself. For example, factorial(n) = n * factorial(n-1).</span>
+        <div class="btn-group btn-group-sm ms-3">
+          <button class="btn btn-outline-success">▲</button>
+          <button class="btn btn-outline-danger">▼</button>
+          <button class="btn btn-outline-info" data-key="edit">Edit</button>
+        </div>
+      </div>
+      <div class="answer-container">
+        <strong>Sara:</strong> <span data-key="saraAnswer">Try using the Fibonacci sequence to understand how recursion stacks work.</span>
+        <div class="btn-group btn-group-sm ms-3">
+          <button class="btn btn-outline-success">▲</button>
+          <button class="btn btn-outline-danger">▼</button>
+          <button class="btn btn-outline-info" data-key="edit">Edit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Leaderboard Section -->
+  <div class="leaderboard-card">
+    <h5 id="leaderboardTitle">🏆 Top Contributors</h5>
+    <ol class="mb-0" id="leaderboardList">
+      <li>Ali - 120 points</li>
+      <li>Sara - 95 points</li>
+      <li>Fatima - 88 points</li>
+    </ol>
+  </div>
+</div>
+
+
+
+
+<script>
+  // Language support system
+  const translations = {
+    en: {
+      "Search posts...": "Search posts...",
+      "🔔 Notifications": "🔔 Notifications",
+      "✅ You received an upvote": "✅ You received an upvote on your answer to \"How does recursion work in JavaScript?\"",
+      "💬 Someone answered": "💬 Someone answered your question about SQL vs NoSQL",
+      "🏆 Top Contributors": "🏆 Top Contributors",
+      "How does recursion work": "How does recursion work in JavaScript?",
+      "I'm struggling to understand": "I'm struggling to understand recursion. Can someone explain it with a simple example?",
+      "💬 View Answers": "💬 View Answers",
+      "▲ Upvote": "▲ Upvote",
+      "▼ Downvote": "▼ Downvote",
+      "Report": "Report",
+      "Bookmark": "Bookmark",
+      "View Resources": "View Resources",
+      "Edit": "Edit",
+      "Write your answer...": "Write your answer...",
+      "Submit Answer": "Submit Answer",
+      "Recursion is when a function calls itself": "Recursion is when a function calls itself. For example, factorial(n) = n * factorial(n-1).",
+      "Try using the Fibonacci sequence": "Try using the Fibonacci sequence to understand how recursion stacks work.",
+      "Sort by User": "Sort by User",
+      "Sort by Tag": "Sort by Tag",
+      "Sort by Date": "Sort by Date",
+      "A-Z": "A-Z",
+      "Z-A": "Z-A",
+      "Newest": "Newest",
+      "Oldest": "Oldest",
+      "JavaScript": "JavaScript",
+      "SQL": "SQL"
+    },
+    ar: {
+      "Search posts...": "ابحث في المشاركات...",
+      "🔔 Notifications": "🔔 الإشعارات",
+      "✅ You received an upvote": "✅ تلقيت تصويتًا إيجابيًا على إجابتك لـ \"كيف يعمل التكرار في جافا سكريبت؟\"",
+      "💬 Someone answered": "💬 قام شخص ما بالإجابة على سؤالك حول SQL مقابل NoSQL",
+      "🏆 Top Contributors": "🏆 المساهمون الأفضل",
+      "How does recursion work": "كيف يعمل التكرار في جافا سكريبت؟",
+      "I'm struggling to understand": "أعاني في فهم التكرار. هل يمكن لأحد شرحه بمثال بسيط؟",
+      "💬 View Answers": "💬 عرض الإجابات",
+      "▲ Upvote": "▲ تصويت إيجابي",
+      "▼ Downvote": "▼ تصويت سلبي",
+      "Report": "إبلاغ",
+      "Bookmark": "حفظ",
+      "View Resources": "عرض المصادر",
+      "Edit": "تعديل",
+      "Write your answer...": "اكتب إجابتك...",
+      "Submit Answer": "إرسال الإجابة",
+      "Recursion is when a function calls itself": "التكرار هو عندما تقوم الدالة باستدعاء نفسها. على سبيل المثال، factorial(n) = n * factorial(n-1).",
+      "Try using the Fibonacci sequence": "حاول استخدام متتالية فيبوناتشي لفهم كيفية عمل مكدس التكرار.",
+      "Sort by User": "ترتيب حسب المستخدم",
+      "Sort by Tag": "ترتيب حسب الوسم",
+      "Sort by Date": "ترتيب حسب التاريخ",
+      "A-Z": "أ-ي",
+      "Z-A": "ي-أ",
+      "Newest": "الأحدث",
+      "Oldest": "الأقدم",
+      "JavaScript": "جافا سكريبت",
+      "SQL": "SQL"
+    }
+  };
+
+  // Initialize document ready function
+  document.addEventListener('DOMContentLoaded', function() {
+    // Add event listener to language select
+    document.getElementById("languageSelect").addEventListener("change", function () {
+      const lang = this.value;
+      document.documentElement.lang = lang;
+      document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+
+      // Apply translations to all elements with text content or placeholders
+      document.querySelectorAll("button, textarea, input, h5, p, span, li, option").forEach(el => {
+        const text = el.placeholder || el.textContent.trim();
+        
+        // Check if this text needs translation
+        for (let key in translations.en) {
+          if (text.includes(key)) {
+            if (el.placeholder) {
+              el.placeholder = translations[lang][key];
+            } else {
+              el.textContent = translations[lang][key];
+            }
+            break; // Stop after finding the first match
+          }
+        }
+      });
+      
+      // Save language preference
+      localStorage.setItem('preferredLanguage', lang);
+    });
+    
+    // Check for saved language preference
+    const savedLang = localStorage.getItem('preferredLanguage');
+    if (savedLang && translations[savedLang]) {
+      document.getElementById('languageSelect').value = savedLang;
+      // Trigger the change event to apply the language
+      document.getElementById('languageSelect').dispatchEvent(new Event('change'));
+    }
+    
+    // Toggle answers visibility
+    document.querySelectorAll('.toggle-answers').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const box = btn.closest('.post-card').querySelector('.answer-box');
+        box.style.display = box.style.display === 'block' ? 'none' : 'block';
+      });
+    });
+  });
+</script>
+
+</body>
+</html>

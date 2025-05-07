@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <title>Create Post | Knowledge Exchange</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .form-section {
+      background: #fff;
+      padding: 30px;
+      margin-top: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .btn-orange {
+      background-color: #ff6f00;
+      color: white;
+    }
+    .btn-orange:hover {
+      background-color: #e65c00;
+    }
+  </style>
+</head>
+
+
+
+<body>
+
+
+
+
+<div class="container">
+  <!-- Language Selector -->
+  <div class="d-flex justify-content-end mt-3">
+    <select id="languageSelect" class="form-select form-select-sm w-auto">
+      <option value="en">English</option>
+      <option value="ar">العربية</option>
+    </select>
+  </div>
+
+  <div class="form-section">
+    <h3 id="createPostTitle">Create New Post</h3>
+
+    <form id="postForm">
+      <!-- Post Title -->
+      <div class="mb-3">
+        <label for="postTitle" class="form-label" id="labelTitle">Title</label>
+        <input type="text" class="form-control" id="postTitle" required>
+      </div>
+
+      <!-- Post Content -->
+      <div class="mb-3">
+        <label for="postBody" class="form-label" id="labelBody">Content</label>
+        <textarea class="form-control" id="postBody" rows="5" required></textarea>
+      </div>
+
+      <!-- Attachment Upload -->
+      <div class="mb-3">
+        <label for="attachment" class="form-label" id="labelAttachment">Attachment</label>
+        <input class="form-control" type="file" id="attachment" multiple>
+      </div>
+
+      <!-- Tags -->
+      <div class="mb-3">
+        <label for="tags" class="form-label" id="labelTags">Tags</label>
+        <input type="text" class="form-control" id="tags" placeholder="e.g. HTML, JavaScript">
+        <div class="form-text" id="tagsHelp">Separate tags with commas</div>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" class="btn btn-orange" id="submitBtn">Submit Post</button>
+    </form>
+  </div>
+</div>
+
+
+
+
+
+<script>
+  const translations = {
+    en: {
+      createPostTitle: "Create New Post",
+      labelTitle: "Title",
+      labelBody: "Content",
+      labelAttachment: "Attachment",
+      labelTags: "Tags",
+      tagsHelp: "Separate tags with commas",
+      submitBtn: "Submit Post"
+    },
+    ar: {
+      createPostTitle: "إنشاء منشور جديد",
+      labelTitle: "العنوان",
+      labelBody: "المحتوى",
+      labelAttachment: "المرفقات",
+      labelTags: "الوسوم",
+      tagsHelp: "افصل الوسوم باستخدام فاصلة",
+      submitBtn: "نشر"
+    }
+  };
+
+  const languageSelect = document.getElementById("languageSelect");
+
+  languageSelect.addEventListener("change", () => {
+    const lang = languageSelect.value;
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+    applyTranslations(lang);
+  });
+
+  function applyTranslations(lang) {
+    const t = translations[lang];
+    document.getElementById("createPostTitle").textContent = t.createPostTitle;
+    document.getElementById("labelTitle").textContent = t.labelTitle;
+    document.getElementById("labelBody").textContent = t.labelBody;
+    document.getElementById("labelAttachment").textContent = t.labelAttachment;
+    document.getElementById("labelTags").textContent = t.labelTags;
+    document.getElementById("tagsHelp").textContent = t.tagsHelp;
+    document.getElementById("submitBtn").textContent = t.submitBtn;
+  }
+
+  // Optional: handle form submission
+  document.getElementById("postForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    alert("Post submitted!");
+    // Add your logic here to handle the post data
+  });
+</script>
+
+</body>
+</html>
