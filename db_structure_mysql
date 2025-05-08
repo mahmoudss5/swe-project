@@ -309,22 +309,26 @@ begin
     );
 end $$
 DELIMITER ;
-
 # trigger when admin remove user
-create trigger delete_user
-    after delete on users
-    for each row
-    begin
-      insert into notifications(user_id, post_id, comment_id, notification_type, notification_message) values(old.id, null, null, 'user_deleted', concat('Your account has been banned for violated the rules'));
-        delete from posts where user_id = old.id;
-        delete from comments where user_id = old.id;
-        delete from post_votes where user_id = old.id;
-        delete from comment_votes where user_id = old.id;
-        delete from post_reports where user_id = old.id;
-        delete from comment_reports where user_id = old.id;
-        delete from notifications where user_id = old.id;
-        delete from login_history where user_id = old.id;
-    end;
+
+DELIMITER $$
+CREATE TRIGGER delete_user
+BEFORE DELETE ON users
+FOR EACH ROW
+BEGIN
+    INSERT INTO notifications(user_id, post_id, comment_id, notification_type, notification_message)
+    VALUES (OLD.id, NULL, NULL, 'user_deleted', CONCAT('Your account has been banned for violated the rules'));
+    DELETE FROM posts WHERE user_id = OLD.id;
+    DELETE FROM comments WHERE user_id = OLD.id;
+    DELETE FROM post_votes WHERE user_id = OLD.id;
+    DELETE FROM comment_votes WHERE user_id = OLD.id;
+    DELETE FROM post_reports WHERE user_id = OLD.id;
+    DELETE FROM comment_reports WHERE user_id = OLD.id;
+    DELETE FROM notifications WHERE user_id = OLD.id;
+    DELETE FROM login_history WHERE user_id = OLD.id;
+END $$
+DELIMITER ;
+
 create trigger  flagged
     after update on users
     for each row
@@ -455,10 +459,11 @@ BEGIN
   END IF;
 END$$
 DELIMITER ;
-# do that after exc all database
+select * from badges;
+select * from users;
+insert into users (name, email, password, date_of_birth) values
+('mahmoud', 'mahmoud@gmail.com',123456, '1998-01-01');
 ALTER TABLE notifications MODIFY post_id INT NULL;
 ALTER TABLE notifications MODIFY comment_id INT NULL;
-alter table badges add column  points not null default 0;
-ALTER TABLE notifications DROP FOREIGN KEY notifications_ibfk_1;  # reomve after exc
 ALTER TABLE notifications
 ADD CONSTRAINT notifications_ibfk_1 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
