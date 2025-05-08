@@ -31,6 +31,14 @@ create table posts(
     updated_at timestamp default current_timestamp on update current_timestamp,
     foreign key (user_id) references users(id)
 );
+create table bookmarks(
+    bookmark_id int auto_increment primary key,
+    user_id int not null,
+    post_id int not null,
+    created_at timestamp default current_timestamp,
+    foreign key (user_id) references users(id),
+    foreign key (post_id) references posts(post_id)
+);
 create table comments(
     comment_id int auto_increment primary key,
     post_id int not null,
@@ -447,4 +455,6 @@ BEGIN
   END IF;
 END$$
 DELIMITER ;
-show triggers ;
+ALTER TABLE notifications MODIFY post_id INT NULL;
+ALTER TABLE notifications MODIFY comment_id INT NULL;
+alter table badges add column  points not null default 0;
