@@ -465,5 +465,6 @@ insert into users (name, email, password, date_of_birth) values
 ('mahmoud', 'mahmoud@gmail.com',123456, '1998-01-01');
 ALTER TABLE notifications MODIFY post_id INT NULL;
 ALTER TABLE notifications MODIFY comment_id INT NULL;
+ALTER TABLE notifications DROP FOREIGN KEY notifications_ibfk_1; # delete this line after exc
 ALTER TABLE notifications
 ADD CONSTRAINT notifications_ibfk_1 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
