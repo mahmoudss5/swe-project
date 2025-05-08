@@ -455,6 +455,10 @@ BEGIN
   END IF;
 END$$
 DELIMITER ;
+# do that after exc all database
 ALTER TABLE notifications MODIFY post_id INT NULL;
 ALTER TABLE notifications MODIFY comment_id INT NULL;
 alter table badges add column  points not null default 0;
+ALTER TABLE notifications DROP FOREIGN KEY notifications_ibfk_1;  # reomve after exc
+ALTER TABLE notifications
+ADD CONSTRAINT notifications_ibfk_1 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
