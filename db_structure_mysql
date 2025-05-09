@@ -147,6 +147,23 @@ create table login_history(
     login_time timestamp default current_timestamp,
     foreign key (user_id) references users(id)
 );
+create table followers(
+    follower_id int auto_increment primary key,
+    user_id int not null,
+    follower_user_id int not null,
+    created_at timestamp default current_timestamp,
+    foreign key (user_id) references users(id),
+    foreign key (follower_user_id) references users(id)
+);
+alter table users
+add column number_of_followers int default 0;
+
+create trigger followers_insert
+    after insert on followers
+    for each row
+    begin
+        update users set number_of_followers = number_of_followers + 1 where id = new.user_id;
+    end;
 -- --------------------------------------------indexes ---------------------------------------------------------------------------------
 # for fast access purpose
 create index idx_post_votes_post_user ON post_votes(post_id, user_id);
@@ -465,6 +482,8 @@ insert into users (name, email, password, date_of_birth) values
 ('mahmoud', 'mahmoud@gmail.com',123456, '1998-01-01');
 ALTER TABLE notifications MODIFY post_id INT NULL;
 ALTER TABLE notifications MODIFY comment_id INT NULL;
-ALTER TABLE notifications DROP FOREIGN KEY notifications_ibfk_1; # delete this line after exc
 ALTER TABLE notifications
 ADD CONSTRAINT notifications_ibfk_1 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
+select * from users;
+insert into users (name, email, password, date_of_birth) values
+('ahmed', 'mahmou@gmail.com',123456, '2005-01-01');
