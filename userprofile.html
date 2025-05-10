@@ -1,3 +1,4 @@
+<?php require_once 'check_session.php'; ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
@@ -27,6 +28,16 @@
     }
     .btn-orange:hover {
       background-color: #e65c00;
+    }
+    .profile-section {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .form-group {
+      margin-bottom: 1rem;
     }
   </style>
 </head>
@@ -62,37 +73,37 @@
 
       <div class="col-md-8">
         <h5 id="updateInfoTitle">Update Profile Info</h5>
-        <form>
+        <form id="profileForm" action="update_profile.php" method="POST">
           <div class="row mb-3">
             <div class="col">
               <label for="name" class="form-label" id="usernameLabel">Full Name</label>
-              <input type="text" class="form-control" id="name" value="John Doe">
+              <input type="text" class="form-control" id="name" name="name" placeholder="Enter your full name">
             </div>
             <div class="col">
               <label for="email" class="form-label">Email</label>
-              <input type="email" class="form-control" id="email" value="john@example.com">
+              <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email">
             </div>
           </div>
           <div class="mb-3">
             <label for="bio" class="form-label" id="bioLabel">Bio</label>
-            <textarea class="form-control" id="bio" rows="3">Passionate about sharing knowledge!</textarea>
+            <textarea class="form-control" id="bio" name="bio" rows="3" placeholder="Tell us about yourself"></textarea>
           </div>
           <button type="submit" class="btn btn-orange mb-3" id="saveChangesBtn">Save Changes</button>
         </form>
 
         <h5 id="changePasswordTitle">Change Password</h5>
-        <form>
+        <form id="passwordForm" action="update_password.php" method="POST">
           <div class="mb-3">
             <label for="currentPassword" class="form-label" id="currentPasswordLabel">Current Password</label>
-            <input type="password" class="form-control" id="currentPassword">
+            <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
           </div>
           <div class="mb-3">
             <label for="newPassword" class="form-label" id="newPasswordLabel">New Password</label>
-            <input type="password" class="form-control" id="newPassword">
+            <input type="password" class="form-control" id="newPassword" name="newPassword" required>
           </div>
           <div class="mb-3">
             <label for="confirmPassword" class="form-label" id="confirmPasswordLabel">Confirm New Password</label>
-            <input type="password" class="form-control" id="confirmPassword">
+            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
           </div>
           <button type="submit" class="btn btn-orange" id="updatePasswordBtn">Update Password</button>
         </form>
@@ -178,6 +189,54 @@
 
     document.documentElement.setAttribute("lang", lang);
     document.documentElement.setAttribute("dir", lang === "ar" ? "rtl" : "ltr");
+  });
+
+  // Form validation
+  document.getElementById('passwordForm').addEventListener('submit', function(e) {
+    const newPassword = document.getElementById('newPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    
+    if (newPassword !== confirmPassword) {
+      e.preventDefault();
+      alert('New passwords do not match!');
+    }
+  });
+
+  // Load user data when page loads
+  window.addEventListener('load', function() {
+    fetch('get_profile.php')
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // Update form fields
+          document.getElementById('name').value = data.name;
+          document.getElementById('email').value = data.email;
+          document.getElementById('bio').value = data.bio;
+          
+          // Update user info display
+          document.getElementById('username').textContent = data.name;
+          document.getElementById('reputation').textContent = data.points;
+          
+          // Format and display dates
+          const createdDate = new Date(data.created_at).toLocaleDateString();
+          const dobDate = data.date_of_birth ? new Date(data.date_of_birth).toLocaleDateString() : 'Not set';
+          
+          // Add additional info to the profile card
+          const profileInfo = document.createElement('div');
+          profileInfo.className = 'mt-3';
+          profileInfo.innerHTML = `
+            <p class="text-muted"><span>Member since</span>: <strong>${createdDate}</strong></p>
+            <p class="text-muted"><span>Date of Birth</span>: <strong>${dobDate}</strong></p>
+            <p class="text-muted"><span>Age</span>: <strong>${data.age || 'Not set'}</strong></p>
+            <p class="text-muted"><span>Account Status</span>: <strong>${data.flag ? 'Flagged' : 'Active'}</strong></p>
+          `;
+          
+          // Insert the new info after the existing stats
+          const statsSection = document.querySelector('.col-md-4');
+          statsSection.appendChild(profileInfo);
+        }
+      })
+      .catch(error => console.error('Error:', error));
   });
 </script>
 
